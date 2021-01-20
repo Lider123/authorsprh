@@ -65,23 +65,19 @@ class SearchFragment : BaseFragment() {
                 is RequestState.Progress -> {
                     showProgress()
                     showEmpty("", false)
-                    binding.recyclerAuthors.setInvisible()
                 }
                 is RequestState.Success -> {
                     hideProgress()
                     showEmpty("", false)
-                    binding.recyclerAuthors.setVisible()
                 }
                 is RequestState.NoData -> {
                     hideProgress()
                     showEmpty(getString(R.string.empty_authors_list), true)
-                    binding.recyclerAuthors.setInvisible()
                 }
                 is RequestState.Error -> {
                     status.error.printStackTrace()
                     hideProgress()
                     showEmpty(getString(R.string.error_authors_list), true)
-                    binding.recyclerAuthors.setInvisible()
                 }
             }
         })

@@ -2,8 +2,7 @@ package ru.babaetskv.authorsprh.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.babaetskv.authorsprh.data.network.Result
 import ru.babaetskv.authorsprh.domain.model.Author
@@ -24,7 +23,7 @@ class AuthorViewModel @Inject constructor(
     }
 
     fun loadAuthor() {
-        GlobalScope.launch(Dispatchers.Main) {
+        viewModelScope.launch {
             state.value = RequestState.Progress
             when (val result = authorsRepository.getAuthor(authorId)) {
                 is Result.Success -> {
