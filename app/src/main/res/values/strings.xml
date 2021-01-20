@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">AuthorsPRH</string>
+
+    <string name="search_hint">Поиск</string>
+    <string name="try_again">Обновить</string>
+    <string name="empty_authors_list">Авторы по указанному запросу не найдены</string>
+    <string name="error_authors_list">Не удалось загрузить список авторов. Попробуйте позже</string>
 </resources>
