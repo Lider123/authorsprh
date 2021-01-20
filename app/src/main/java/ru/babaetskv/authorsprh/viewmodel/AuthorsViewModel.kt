@@ -28,7 +28,7 @@ class AuthorsViewModel @Inject constructor(
 ) : ViewModel() {
     private val authorsDataSourceFactory = AuthorsDataSource.Factory(authorsRepository, viewModelScope)
     private val searchChannel = BroadcastChannel<String>(Channel.BUFFERED)
-    private var searchString = ""
+    private var searchString: String = prefsProvider.searchQuery
         set(value) {
             prefsProvider.searchQuery = value
             field = value

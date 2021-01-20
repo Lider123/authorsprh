@@ -52,7 +52,7 @@ class AppModule(private val context: Context) {
 }
 
 @Module
-class PrefsModule() {
+class PrefsModule {
 
     @Singleton
     @Provides

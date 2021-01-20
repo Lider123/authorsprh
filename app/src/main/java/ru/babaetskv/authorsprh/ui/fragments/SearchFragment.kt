@@ -17,7 +17,6 @@ import kotlinx.coroutines.FlowPreview
 import ru.babaetskv.authorsprh.MainApplication
 import ru.babaetskv.authorsprh.R
 import ru.babaetskv.authorsprh.Screens
-import ru.babaetskv.authorsprh.data.prefs.PreferencesProvider
 import ru.babaetskv.authorsprh.databinding.FragmentSearchBinding
 import ru.babaetskv.authorsprh.domain.model.Author
 import ru.babaetskv.authorsprh.global.ui.BaseFragment
@@ -36,7 +35,6 @@ import javax.inject.Inject
 class SearchFragment : BaseFragment() {
     @Inject lateinit var viewModel: AuthorsViewModel
     @Inject lateinit var router: Router
-    @Inject lateinit var prefsProvider: PreferencesProvider
 
     private val binding: FragmentSearchBinding by viewBinding(FragmentSearchBinding::bind)
     private lateinit var adapter: FastAdapter<AuthorItem>
@@ -55,8 +53,18 @@ class SearchFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
-        initListeners()
-        binding.etSearch.setText(prefsProvider.searchQuery)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.etSearch.doOnTextChanged { text, _, _, _ ->
+            viewModel.updateAuthors(text.toString())
+        }
+    }
+
+    override fun onPause() {
+        binding.etSearch.doOnTextChanged { _, _, _, _ ->  }
+        super.onPause()
     }
 
     private fun initViewModel() {
@@ -86,12 +94,6 @@ class SearchFragment : BaseFragment() {
         viewModel.authorsLiveData.observe(this, { authors ->
             itemAdapter.submitList(authors)
         })
-    }
-
-    private fun initListeners() {
-        binding.etSearch.doOnTextChanged { text, _, _, _ ->
-            viewModel.updateAuthors(text.toString())
-        }
     }
 
     private fun initAdapter() {
