@@ -74,6 +74,7 @@ class SearchFragment : BaseFragment() {
                     binding.recyclerAuthors.setInvisible()
                 }
                 is RequestState.Error -> {
+                    status.error.printStackTrace()
                     hideProgress()
                     showEmpty(getString(R.string.error_authors_list), true)
                     binding.recyclerAuthors.setInvisible()
@@ -118,7 +119,7 @@ class SearchFragment : BaseFragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@SearchFragment.adapter
             itemAnimator = null
-            addItemDecoration(EmptyDividerDecoration(requireContext(), R.dimen.margin_half, false))
+            addItemDecoration(EmptyDividerDecoration(requireContext(), R.dimen.margin_default, false))
         }
     }
 

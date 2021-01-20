@@ -4,8 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 
 data class Author(
     val authorId: Long,
-    val firstName: String,
-    val lastName: String
+    val displayName: String,
+    val spotlight: String?
 ) {
 
     companion object {

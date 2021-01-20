@@ -3,7 +3,6 @@ package ru.babaetskv.authorsprh.di
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
-import com.google.gson.GsonBuilder
 import com.mikepenz.fastadapter.paged.ExperimentalPagedSupport
 import dagger.Component
 import dagger.Module
@@ -14,7 +13,7 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import ru.babaetskv.authorsprh.BuildConfig
 import ru.babaetskv.authorsprh.data.network.Api
 import ru.babaetskv.authorsprh.data.network.repository.AuthorsRepositoryImpl
@@ -86,12 +85,9 @@ class RetrofitModule {
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {
-        val gson = GsonBuilder()
-            .serializeNulls()
-            .create()
         return Retrofit.Builder()
             .client(provideOkHttpClient())
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(SimpleXmlConverterFactory.create())
             .baseUrl(BuildConfig.API_URL)
             .build()
     }

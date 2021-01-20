@@ -21,6 +21,11 @@ class AuthorsDataSource(
         params: LoadInitialParams<Long>,
         callback: LoadInitialCallback<Long, Author>
     ) {
+        if (searchString.isEmpty()) {
+            callback.onResult(listOf(), null, 2L)
+            return
+        }
+
         val p = GetAuthorsParams(
             limit = params.requestedLoadSize.toLong(),
             offset = 0,

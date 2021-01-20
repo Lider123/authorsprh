@@ -16,23 +16,20 @@ class AuthorItem(val author: Author?) : AbstractItem<AuthorItem.ViewHolder>() {
     override fun getViewHolder(v: View) = ViewHolder(v)
 
     class ViewHolder(view: View) : FastAdapter.ViewHolder<AuthorItem>(view) {
-        private val tvFirstName = view.findViewById<AppCompatTextView>(R.id.tvFirstName)
-        private val tvLastName = view.findViewById<AppCompatTextView>(R.id.tvLastName)
+        private val tvFullName = view.findViewById<AppCompatTextView>(R.id.tvFullName)
 
         override fun bindView(item: AuthorItem, payloads: List<Any>) {
             val data = item.author ?: run {
                 bindPlaceholder()
                 return
             }
-            tvFirstName.text = data.firstName
-            tvLastName.text = data.lastName
+            tvFullName.text = data.displayName
         }
 
         override fun unbindView(item: AuthorItem) = Unit
 
         private fun bindPlaceholder() {
-            tvFirstName.text = "..."
-            tvLastName.text = "..."
+            tvFullName.text = "..."
         }
     }
 }

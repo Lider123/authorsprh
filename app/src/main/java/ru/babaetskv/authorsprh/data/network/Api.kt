@@ -2,7 +2,7 @@ package ru.babaetskv.authorsprh.data.network
 
 import retrofit2.http.GET
 import retrofit2.http.Query
-import ru.babaetskv.authorsprh.data.network.model.AuthorModel
+import ru.babaetskv.authorsprh.data.network.model.GetAuthorsResponseModel
 
 interface Api {
 
@@ -12,5 +12,5 @@ interface Api {
         @Query("max") max: Long,
         @Query("lastName") lastName: String,
         @Query("expandLevel") expandLevel: Int = 1
-    ): List<AuthorModel>
+    ): GetAuthorsResponseModel
 }
