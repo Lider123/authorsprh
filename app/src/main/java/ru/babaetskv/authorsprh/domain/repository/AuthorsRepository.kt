@@ -5,5 +5,8 @@ import ru.babaetskv.authorsprh.domain.model.Author
 import ru.babaetskv.authorsprh.domain.model.GetAuthorsParams
 
 interface AuthorsRepository {
+
     suspend fun getAuthors(params: GetAuthorsParams): Result<List<Author>>
+
+    suspend fun getAuthor(authorId: Long): Result<Author>
 }

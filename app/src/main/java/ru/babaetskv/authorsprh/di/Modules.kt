@@ -19,6 +19,7 @@ import ru.babaetskv.authorsprh.data.network.Api
 import ru.babaetskv.authorsprh.data.network.repository.AuthorsRepositoryImpl
 import ru.babaetskv.authorsprh.domain.repository.AuthorsRepository
 import ru.babaetskv.authorsprh.ui.MainActivity
+import ru.babaetskv.authorsprh.ui.fragments.AuthorFragment
 import ru.babaetskv.authorsprh.ui.fragments.SearchFragment
 import javax.inject.Singleton
 
@@ -31,6 +32,7 @@ interface AppComponent {
     @ExperimentalCoroutinesApi
     @ExperimentalPagedSupport
     fun inject(fragment: SearchFragment)
+    fun inject(fragment: AuthorFragment)
 }
 
 @Module

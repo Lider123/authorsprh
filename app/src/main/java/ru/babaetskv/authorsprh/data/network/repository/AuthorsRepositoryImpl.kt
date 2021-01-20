@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import ru.babaetskv.authorsprh.data.network.Api
 import ru.babaetskv.authorsprh.data.network.DirectMappers
 import ru.babaetskv.authorsprh.data.network.Result
+import ru.babaetskv.authorsprh.data.network.model.AuthorModel
 import ru.babaetskv.authorsprh.data.network.model.GetAuthorsResponseModel
 import ru.babaetskv.authorsprh.domain.repository.AuthorsRepository
 import ru.babaetskv.authorsprh.domain.model.Author
@@ -24,6 +25,16 @@ class AuthorsRepositoryImpl(
                     lastName = params.searchString
                 )
             val data: List<Author> = DirectMappers.mapGetAuthorsResponse.invoke(response)
+            Result.Success(data)
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
+    override suspend fun getAuthor(authorId: Long): Result<Author> = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val response: AuthorModel = api.getAuthor(authorId)
+            val data: Author = DirectMappers.mapAuthor(response)
             Result.Success(data)
         } catch (e: Exception) {
             Result.Error(e)
