@@ -12,9 +12,12 @@ class MainApplication : Application() {
 
     private fun initDagger() {
         appComponent = DaggerAppComponent.builder()
+                .appModule(AppModule(this))
                 .navigationModule(NavigationModule())
                 .apiModule(ApiModule())
                 .retrofitModule(RetrofitModule())
+                .prefsModule(PrefsModule())
+                .repositoryModule(RepositoryModule())
                 .build()
     }
 

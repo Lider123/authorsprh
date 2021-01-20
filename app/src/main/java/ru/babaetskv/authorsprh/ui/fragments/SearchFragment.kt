@@ -17,6 +17,7 @@ import kotlinx.coroutines.FlowPreview
 import ru.babaetskv.authorsprh.MainApplication
 import ru.babaetskv.authorsprh.R
 import ru.babaetskv.authorsprh.Screens
+import ru.babaetskv.authorsprh.data.prefs.PreferencesProvider
 import ru.babaetskv.authorsprh.databinding.FragmentSearchBinding
 import ru.babaetskv.authorsprh.domain.model.Author
 import ru.babaetskv.authorsprh.global.ui.BaseFragment
@@ -24,7 +25,6 @@ import ru.babaetskv.authorsprh.global.ui.EmptyDividerDecoration
 import ru.babaetskv.authorsprh.global.viewmodel.RequestState
 import ru.babaetskv.authorsprh.ui.item.AuthorItem
 import ru.babaetskv.authorsprh.utils.setGone
-import ru.babaetskv.authorsprh.utils.setInvisible
 import ru.babaetskv.authorsprh.utils.setVisible
 import ru.babaetskv.authorsprh.utils.viewBinding
 import ru.babaetskv.authorsprh.viewmodel.AuthorsViewModel
@@ -36,6 +36,7 @@ import javax.inject.Inject
 class SearchFragment : BaseFragment() {
     @Inject lateinit var viewModel: AuthorsViewModel
     @Inject lateinit var router: Router
+    @Inject lateinit var prefsProvider: PreferencesProvider
 
     private val binding: FragmentSearchBinding by viewBinding(FragmentSearchBinding::bind)
     private lateinit var adapter: FastAdapter<AuthorItem>
@@ -55,6 +56,7 @@ class SearchFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         initListeners()
+        binding.etSearch.setText(prefsProvider.searchQuery)
     }
 
     private fun initViewModel() {

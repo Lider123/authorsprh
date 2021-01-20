@@ -1,5 +1,6 @@
 package ru.babaetskv.authorsprh.di
 
+import android.content.Context
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
@@ -17,6 +18,7 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import ru.babaetskv.authorsprh.BuildConfig
 import ru.babaetskv.authorsprh.data.network.Api
 import ru.babaetskv.authorsprh.data.network.repository.AuthorsRepositoryImpl
+import ru.babaetskv.authorsprh.data.prefs.PreferencesProvider
 import ru.babaetskv.authorsprh.domain.repository.AuthorsRepository
 import ru.babaetskv.authorsprh.ui.MainActivity
 import ru.babaetskv.authorsprh.ui.fragments.AuthorFragment
@@ -24,7 +26,14 @@ import ru.babaetskv.authorsprh.ui.fragments.SearchFragment
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [ApiModule::class, RetrofitModule::class, NavigationModule::class, RepositoryModule::class])
+@Component(modules = [
+    AppModule::class,
+    ApiModule::class,
+    RetrofitModule::class,
+    NavigationModule::class,
+    RepositoryModule::class,
+    PrefsModule::class
+])
 interface AppComponent {
     fun inject(activity: MainActivity)
 
@@ -33,6 +42,22 @@ interface AppComponent {
     @ExperimentalPagedSupport
     fun inject(fragment: SearchFragment)
     fun inject(fragment: AuthorFragment)
+}
+
+@Module
+class AppModule(private val context: Context) {
+
+    @Provides
+    fun provideContext(): Context = context
+}
+
+@Module
+class PrefsModule() {
+
+    @Singleton
+    @Provides
+    fun providePreferencesProvider(context: Context): PreferencesProvider =
+            PreferencesProvider(context)
 }
 
 @Module

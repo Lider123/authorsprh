@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import ru.babaetskv.authorsprh.data.prefs.PreferencesProvider
 import ru.babaetskv.authorsprh.domain.model.Author
 import ru.babaetskv.authorsprh.domain.repository.AuthorsRepository
 import ru.babaetskv.authorsprh.global.viewmodel.RequestState
@@ -22,11 +23,16 @@ import javax.inject.Inject
 @FlowPreview
 @ExperimentalCoroutinesApi
 class AuthorsViewModel @Inject constructor(
-    authorsRepository: AuthorsRepository
+    authorsRepository: AuthorsRepository,
+    private val prefsProvider: PreferencesProvider
 ) : ViewModel() {
     private val authorsDataSourceFactory = AuthorsDataSource.Factory(authorsRepository, viewModelScope)
     private val searchChannel = BroadcastChannel<String>(Channel.BUFFERED)
     private var searchString = ""
+        set(value) {
+            prefsProvider.searchQuery = value
+            field = value
+        }
 
     val authorsLiveData: LiveData<PagedList<Author>>
 
