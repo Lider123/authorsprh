@@ -24,7 +24,6 @@ import ru.babaetskv.authorsprh.global.ui.EmptyDividerDecoration
 import ru.babaetskv.authorsprh.global.viewmodel.RequestState
 import ru.babaetskv.authorsprh.ui.item.AuthorItem
 import ru.babaetskv.authorsprh.utils.setGone
-import ru.babaetskv.authorsprh.utils.setInvisible
 import ru.babaetskv.authorsprh.utils.setVisible
 import ru.babaetskv.authorsprh.utils.viewBinding
 import ru.babaetskv.authorsprh.viewmodel.AuthorsViewModel
@@ -54,7 +53,18 @@ class SearchFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
-        initListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.etSearch.doOnTextChanged { text, _, _, _ ->
+            viewModel.updateAuthors(text.toString())
+        }
+    }
+
+    override fun onPause() {
+        binding.etSearch.doOnTextChanged { _, _, _, _ ->  }
+        super.onPause()
     }
 
     private fun initViewModel() {
@@ -84,12 +94,6 @@ class SearchFragment : BaseFragment() {
         viewModel.authorsLiveData.observe(this, { authors ->
             itemAdapter.submitList(authors)
         })
-    }
-
-    private fun initListeners() {
-        binding.etSearch.doOnTextChanged { text, _, _, _ ->
-            viewModel.updateAuthors(text.toString())
-        }
     }
 
     private fun initAdapter() {
