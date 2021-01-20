@@ -3,11 +3,11 @@ package ru.babaetskv.authorsprh.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class AuthorsViewModel @Inject constructor(
     authorsRepository: AuthorsRepository
 ) : ViewModel() {
-    private val authorsDataSourceFactory = AuthorsDataSource.Factory(authorsRepository)
+    private val authorsDataSourceFactory = AuthorsDataSource.Factory(authorsRepository, viewModelScope)
     private val searchChannel = BroadcastChannel<String>(Channel.BUFFERED)
     private var searchString = ""
 
@@ -38,7 +38,7 @@ class AuthorsViewModel @Inject constructor(
             .setPrefetchDistance(3)
             .build()
         authorsLiveData = LivePagedListBuilder(authorsDataSourceFactory, config).build()
-        GlobalScope.launch {
+        viewModelScope.launch {
             searchChannel.openSubscription().consumeAsFlow().debounce(SEARCH_REQUEST_DEBOUNCE_MILLIS).collect { searchRequest: String ->
                 with (authorsDataSourceFactory) {
                     searchString = searchRequest
@@ -69,7 +69,7 @@ class AuthorsViewModel @Inject constructor(
     }
 
     fun updateAuthors() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             searchChannel.send(searchString)
         }
     }

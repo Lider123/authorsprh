@@ -5,4 +5,7 @@
     <string name="try_again">Обновить</string>
     <string name="empty_authors_list">Авторы по указанному запросу не найдены</string>
     <string name="error_authors_list">Не удалось загрузить список авторов. Попробуйте позже</string>
+    <string name="empty_author">Не найдены данные по выбранному автору</string>
+    <string name="error_author">Не удалось загрузить данные по выбранному автору. Попробуйте позже</string>
+    <string name="no_author_description">Нет описания</string>
 </resources>

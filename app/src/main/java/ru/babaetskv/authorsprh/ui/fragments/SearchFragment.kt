@@ -6,6 +6,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.terrakok.cicerone.Router
 import com.mikepenz.fastadapter.ClickListener
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
@@ -15,6 +16,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import ru.babaetskv.authorsprh.MainApplication
 import ru.babaetskv.authorsprh.R
+import ru.babaetskv.authorsprh.Screens
 import ru.babaetskv.authorsprh.databinding.FragmentSearchBinding
 import ru.babaetskv.authorsprh.domain.model.Author
 import ru.babaetskv.authorsprh.global.ui.BaseFragment
@@ -33,6 +35,7 @@ import javax.inject.Inject
 @FlowPreview
 class SearchFragment : BaseFragment() {
     @Inject lateinit var viewModel: AuthorsViewModel
+    @Inject lateinit var router: Router
 
     private val binding: FragmentSearchBinding by viewBinding(FragmentSearchBinding::bind)
     private lateinit var adapter: FastAdapter<AuthorItem>
@@ -44,6 +47,7 @@ class SearchFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MainApplication.appComponent.inject(this)
+        initViewModel()
         initAdapter()
     }
 
@@ -51,33 +55,29 @@ class SearchFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         initListeners()
-        initViewModel()
     }
 
     private fun initViewModel() {
         viewModel.getState().observe(this, Observer { status ->
             status ?: return@Observer
+
             when (status) {
                 is RequestState.Progress -> {
                     showProgress()
                     showEmpty("", false)
-                    binding.recyclerAuthors.setInvisible()
                 }
                 is RequestState.Success -> {
                     hideProgress()
                     showEmpty("", false)
-                    binding.recyclerAuthors.setVisible()
                 }
                 is RequestState.NoData -> {
                     hideProgress()
                     showEmpty(getString(R.string.empty_authors_list), true)
-                    binding.recyclerAuthors.setInvisible()
                 }
                 is RequestState.Error -> {
                     status.error.printStackTrace()
                     hideProgress()
                     showEmpty(getString(R.string.error_authors_list), true)
-                    binding.recyclerAuthors.setInvisible()
                 }
             }
         })
@@ -106,10 +106,11 @@ class SearchFragment : BaseFragment() {
                     adapter: IAdapter<AuthorItem>,
                     item: AuthorItem,
                     position: Int
-                ): Boolean {
-                    // TODO: go to author fragment
-                    return true
-                }
+                ): Boolean =
+                    item.author?.let {
+                        router.navigateTo(Screens.Author(item.author.authorId))
+                        true
+                    } ?: false
             }
         }
     }

@@ -2,6 +2,7 @@ package ru.babaetskv.authorsprh.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -14,7 +15,8 @@ import ru.babaetskv.authorsprh.global.viewmodel.RequestState
 
 class AuthorsDataSource(
     private val searchString: String,
-    private val authorsRepository: AuthorsRepository
+    private val authorsRepository: AuthorsRepository,
+    private val scope: CoroutineScope
 ) : BaseDataSource<Author>() {
 
     override fun loadInitial(
@@ -31,7 +33,7 @@ class AuthorsDataSource(
             offset = 0,
             searchString = searchString
         )
-        GlobalScope.launch(Dispatchers.Main) {
+        scope.launch {
             updateState(RequestState.Progress)
             when (val result = authorsRepository.getAuthors(p)) {
                 is Result.Success -> {
@@ -55,7 +57,7 @@ class AuthorsDataSource(
             searchString = searchString
         )
 
-        GlobalScope.launch(Dispatchers.Main) {
+        scope.launch {
             updateState(RequestState.Progress)
             when (val result = authorsRepository.getAuthors(p)) {
                 is Result.Success -> {
@@ -75,13 +77,14 @@ class AuthorsDataSource(
     }
 
     class Factory(
-            private val authorsRepository: AuthorsRepository
+            private val authorsRepository: AuthorsRepository,
+            private val scope: CoroutineScope
     ) : DataSource.Factory<Long, Author>() {
         var searchString = ""
         val authorsDataSourceLiveData = MutableLiveData<AuthorsDataSource>()
 
         override fun create(): DataSource<Long, Author> =
-            AuthorsDataSource(searchString, authorsRepository).also {
+            AuthorsDataSource(searchString, authorsRepository, scope).also {
                 authorsDataSourceLiveData.postValue(it)
             }
     }
